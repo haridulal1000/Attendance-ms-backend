@@ -1,5 +1,6 @@
 const mongoose=require('mongoose');
 const {Schema}=mongoose;
+//scheme for employees
 const EmployeeSchema=new Schema(
     {
         username:{

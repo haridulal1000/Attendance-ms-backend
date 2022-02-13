@@ -1,6 +1,7 @@
 const mongoose=require('mongoose');
 const {Schema}=mongoose;
 const getDateObject=require('../utils/getdate');
+//scheme for check-ins
 const CheckInSchema=new Schema(
     {
         userId:{

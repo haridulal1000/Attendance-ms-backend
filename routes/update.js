@@ -4,6 +4,7 @@ const CheckIn = require('../models/Checkin');
 const CheckOut = require('../models/CheckOut');
 const app=express();
 const router=express.Router();
+//updating the attributes of the check-in check-out pairs
 router.put('/',getUser,async (req,res)=>{
     try{
 

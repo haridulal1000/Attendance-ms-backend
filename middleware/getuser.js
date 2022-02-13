@@ -1,9 +1,9 @@
 const jwt =require('jsonwebtoken');
 require('dotenv').config();
 const KEY=process.env.KEY;
+//middleware to get the id of the logged in user
 const getUser= (req,res,next)=>{
     const token=req.header('auth-token');
-    //console.log(token);
     if(!token){
         return res.status(401).json({error:'User not found'});
     }

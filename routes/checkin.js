@@ -3,7 +3,7 @@ const getUser = require('../middleware/getuser');
 const CheckIn=require('../models/Checkin');
 const Employee = require('../models/Employee');
 const router=express.Router();
-
+//adding check-in into the database
 router.post('/',getUser,async (req,res)=>{
     try {
      let success=true;
@@ -24,7 +24,6 @@ router.post('/',getUser,async (req,res)=>{
         return res.status(400).json({success:false,message:'Already checked In'});
     }else{
         await newCheckIn.save();
-    // console.log(newCheckIn);
     const user=await Employee.findById(req.user.id);
     res.json({user:user,success:true});
     }   

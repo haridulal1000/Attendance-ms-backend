@@ -4,6 +4,7 @@ const CheckIn = require('../models/Checkin');
 const CheckOut = require('../models/CheckOut');
 const app=express();
 const router=express.Router();
+//getting the list of attendances for a particular logged in user
 router.get('/',getUser,async (req,res)=>{
     try {
         let success=true;

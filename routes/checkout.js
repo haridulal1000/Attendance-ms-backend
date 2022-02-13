@@ -5,7 +5,7 @@ const CheckOut=require('../models/CheckOut');
 const Employee = require('../models/Employee');
 const getDateObject = require('../utils/getdate');
 const router=express.Router();
-
+//adding check-outs into the database
 router.post('/',getUser,async (req,res)=>{ 
     try {
         let success=true;

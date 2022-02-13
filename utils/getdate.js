@@ -1,3 +1,4 @@
+//functions to get the date and time for the check-ins and check-outs
 const getYear=()=>{
     const date=new Date(Date.now());
     return date.getFullYear();

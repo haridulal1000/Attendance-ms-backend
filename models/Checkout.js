@@ -1,6 +1,7 @@
 const mongoose=require('mongoose');
 const {Schema}=mongoose;
 const getDateObject=require('../utils/getdate');
+//schema for check-outs
 const CheckOutSchema=new Schema(
     {
         userId:{

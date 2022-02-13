@@ -91,7 +91,8 @@ catch(e){
     console.log(message);
     res.status(500).json({message:e.message,success:false});
 }});
-
+//Ghe details of the users
+//Login Required
 router.get('/userdetails',getUser,async (req,res)=>{
     try {
     const employee=await Employee.findById(req.user.id).select('username password name');
