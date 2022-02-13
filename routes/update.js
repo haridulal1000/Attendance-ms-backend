@@ -1,65 +1,62 @@
 const express=require('express');
 const getUser = require('../middleware/getuser');
-const CheckIn = require('../models/Checkin');
-const CheckOut = require('../models/CheckOut');
+const Attendance = require('../models/Attendance');
+const getDateObject = require('../utils/getdate');
 const app=express();
 const router=express.Router();
 //updating the attributes of the check-in check-out pairs
 router.put('/',getUser,async (req,res)=>{
     try{
-
-        let success=true;
-        console.log(req.body.checkIn.id);
-        const checkIn=await CheckIn.findById(req.body.checkIn.id);
-        console.log(checkIn);
-        if(!checkIn){
-            console.log('Not found')
-            return res.status(400).json({success:false});
+        console.log(req.body);
+        const attendance=await Attendance.findById(req.body.id);
+        if(req.body.Date=== '' || req.body.Date===null){
+            req.body.Date=getDateObject.getDate();
         }
-        if(checkIn.userId.toString()!==req.user.id){
-            console.log('Not found')
-            return res.status(401).json({success:false});
+        if(req.body.Month==='' || req.body.Month===null){
+            req.body.Month=getDateObject.getMonth();
         }
-        
-        await CheckIn.findByIdAndUpdate(req.body.checkIn.id,{
-            checkedIn:req.body.checkIn.checkedIn,
-            year:req.body.checkIn.year,
-            month:req.body.checkIn.month,
-            date:req.body.checkIn.date,
-            hours:req.body.checkIn.hours,
-            minute:req.body.checkIn.minute,
-            second:req.body.checkIn.second,
-        });
-        const checkOut=await CheckOut.findOne({year:checkIn.year,month:checkIn.month,date:checkIn.date,userId:req.user.id});
-        if(checkOut){
-            await CheckOut.findByIdAndUpdate(req.body.checkOut.id,{
-                checkedOut:req.body.checkOut.checkedIn,
-                year:req.body.checkOut.year,
-                month:req.body.checkOut.month,
-                date:req.body.checkOut.date,
-                hours:req.body.checkOut.hours,
-                minute:req.body.checkOut.minute,
-                second:req.body.checkOut.second,
-            });
-            await newCheckOut.save();
-            success=true;
-        }else{
-            const newCheckOut= await CheckOut.create(
-                {
-                    userId:req.user.id,
-                checkedOut:req.body.checkOut.checkedIn,
-                year:req.body.checkOut.year,
-                month:req.body.checkOut.month,
-                date:req.body.checkOut.date,
-                hours:req.body.checkOut.hours,
-                minute:req.body.checkOut.minute,
-                second:req.body.checkOut.second
-            });
-            await newCheckOut.save();
-            success=true;
+        if(req.body.Year==='' || req.body.Year===null){
+            req.body.Year=getDateObject.getYear();
         }
-        console.log('Deleted');
-       return res.json({success:true});
+        if(req.body.checkInHours==='' || req.body.checkInHours===null){
+            req.body.checkInHours=getDateObject.getHour();
+        }
+        if(req.body.checkInMinute==='' || req.body.checkInMinute===null){
+            req.body.checkInMinute=getDateObject.getMinute();
+        }
+        if(req.body.checkInSecond==='' || req.body.checkInSecond===null){
+            req.body.checkInSecond=getDateObject.getSecond();
+        }
+        if(req.body.checkOutHours==='' || req.body.checkOutHours===null){
+            req.body.checkOutHours=getDateObject.getHour();
+        }
+        if(req.body.checkOutMinute==='' || req.body.checkOutMinute===null){
+            req.body.checkOutMinute=getDateObject.getMinute();
+        }
+        if(req.body.checkOutSecond==='' || req.body.checkOutSecond===null){
+            req.body.checkOutSecond=getDateObject.getSecond();
+        }
+        if(!attendance){
+            return res.status(400).json({success:false,type:400});
+        }
+        if(attendance.userId.toString()===req.user.id){
+            await Attendance.findByIdAndUpdate(attendance._id,{
+                checkedIn:req.body.checkedIn,
+                Year:req.body.Year,
+                Month:req.body.Month,
+                Date:req.body.Date,
+                checkInHours:req.body.checkInHours,
+                checkInMinute:req.body.checkInMinute,
+                checkInSecond:req.body.checkInSecond,
+                checkedOut:req.body.checkedOut,
+                checkOutHours:req.body.checkOutHours,
+                checkOutMinute:req.body.checkOutMinute,
+                checkOutSecond:req.body.checkOutSecond,
+            })
+           return  res.json({success:true,type:200});
+        } else{
+            return res.status(401).json({success:false,type:401});
+        }
     }catch(e){
         res.status(500).json({success:false,message:'Internal Server Error',type:500});
     }

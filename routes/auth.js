@@ -4,7 +4,6 @@ const router=express.Router();
 const {validationResult,body}=require('express-validator');
 const jwt= require('jsonwebtoken');
 const getUser = require('../middleware/getuser');
-const { findOne } = require('../models/Employee');
 const Employee=require('../models/Employee')
 require('dotenv').config();
 const KEY=process.env.KEY;
@@ -20,12 +19,12 @@ router.post('/login',[
     const {username,password}= req.body;
     const employee=await Employee.findOne({username:username});
     if(!employee){
-        return res.status(401).json({error:'Enter correct credential'});
+        return res.status(401).json({error:'Enter correct credential',type:401});
     }
     console.log(employee.password);
     const result=await bcrypt.compare(password,employee.password);
     if(!result){
-        return res.status(401).json({error:'Username and password do not match'});
+        return res.status(401).json({error:'Username and password do not match',type:401});
     }
     const id=employee._id;
         const user={
@@ -35,7 +34,7 @@ router.post('/login',[
         
         const authToken=jwt.sign(user,KEY);
         success=true;
-        res.json({authToken,success});
+        res.json({authToken,success:true,type:200});
    } catch (error) {
        res.status(500).json({success:false,message:'Internal Server Error',type:500});
     }
@@ -59,7 +58,7 @@ router.post('/signup',[
         const employee2=await Employee.findOne({username:req.body.username});
         if(employee2){
             console.log(employee2);
-           return res.status(400).json({message:'Username already exists',success:false});
+           return res.status(400).json({message:'Username already exists',success:false,type:400});
         }
         const salt=await bcrypt.genSalt(10);
         const secPassword=await bcrypt.hash(req.body.password,salt);
@@ -82,7 +81,7 @@ router.post('/signup',[
         
         const authToken=jwt.sign(user,KEY);
         success=true;
-        res.json({authToken,success});
+        res.json({authToken,success,type:200});
    
     
 }
@@ -91,7 +90,7 @@ catch(e){
     console.log(message);
     res.status(500).json({message:e.message,success:false});
 }});
-//Ghe details of the users
+//The details of the users
 //Login Required
 router.get('/userdetails',getUser,async (req,res)=>{
     try {

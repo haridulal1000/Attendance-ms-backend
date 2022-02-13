@@ -11,7 +11,7 @@ const getUser= (req,res,next)=>{
         jwt.verify(token, KEY,(err,user)=>{
             if(err){
                 console.log('error');
-       return res.status(401).json({error:'Error in getting user',success:false});
+       return res.status(401).json({error:'Error in getting user',success:false,type:401});
             }
             req.user=user;
         next();
@@ -20,7 +20,7 @@ const getUser= (req,res,next)=>{
         
     } catch (error) {
         console.log(error);
-        res.status(401).json({error:'Error in getting user',success:false});
+        res.status(500).json({error:'Error in getting user',success:false,type:500});
     }
     
 }

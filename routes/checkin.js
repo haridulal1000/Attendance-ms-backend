@@ -1,32 +1,34 @@
 const express=require('express');
 const getUser = require('../middleware/getuser');
-const CheckIn=require('../models/Checkin');
+const Attendance = require('../models/Attendance');
 const Employee = require('../models/Employee');
 const router=express.Router();
 //adding check-in into the database
 router.post('/',getUser,async (req,res)=>{
     try {
      let success=true;
-    const newCheckIn=new CheckIn({userId:req.user.id});
-    const checkIn=await CheckIn.findOne(
+     const newAttendance=new Attendance({
+         userId:req.user.id,
+         remarks:req.body.remarks
+     });
+    const attendance=await Attendance.findOne(
         {
             userId:req.user.id,
-        year:newCheckIn.year,
-        month:newCheckIn.month,
-        date:newCheckIn.date
+            Year:newAttendance.Year,
+            Month:newAttendance.Month,
+            Date:newAttendance.Date
     });
-    console.log(checkIn);
-    if(checkIn!==null){
-        success=false;
-    }
-    
-    if(!success){
-        return res.status(400).json({success:false,message:'Already checked In'});
+    if(attendance && attendance.checkedIn){
+        return res.status(400).json({success:false,type:400});
     }else{
-        await newCheckIn.save();
-    const user=await Employee.findById(req.user.id);
-    res.json({user:user,success:true});
-    }   
+        await newAttendance.save();
+        return res.json({success:true,type:200});
+    }
+
+
+
+    
+    
     } catch (error) {
         res.status(500).json({success:false,message:'Internal Server Error',type:500}); 
     }

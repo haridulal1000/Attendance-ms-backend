@@ -2,44 +2,64 @@ const mongoose=require('mongoose');
 const {Schema}=mongoose;
 const getDateObject=require('../utils/getdate');
 //schema for check-outs
-const CheckOutSchema=new Schema(
+const AttendanceScheme=new Schema(
     {
         userId:{
             type:Schema.Types.ObjectId,
             required:true,
             ref:'Employee'
         },
-        checkedOut:{
+        checkedIn:{
             type:Boolean,
             default:true
-        },
-        year:{
+        },Year:{
             type:Number,
             default:getDateObject.getYear
         },
-        month:{
+        Month:{
             type:Number,
             default:getDateObject.getMonth
         },
-        date:{
+        Date:{
             type:Number,
             default:getDateObject.getDate
         },
-        hours:{
+        checkInHours:{
             type:Number,
             default:getDateObject.getHour
         },
-        minute:{
+        checkInMinute:{
             type:Number,
             default:getDateObject.getMinute
         },
-        second:{
+        checkInSecond:{
             type:Number,
             default:getDateObject.getSecond
+        },
+        checkedOut:{
+            type:Boolean,
+            default:false
+        },
+        checkOutHours:{
+            type:Number,
+            default:getDateObject.getHour
+        },
+        checkOutMinute:{
+            type:Number,
+            default:getDateObject.getMinute
+        },
+        checkOutSecond:{
+            type:Number,
+            default:getDateObject.getSecond
+        },
+        remarks:{
+            type:String,
+            default:'No Remarks'
         }
+        
     }
 );
 
-const CheckOut=mongoose.model('CheckOut',CheckOutSchema);
-CheckOut.createIndexes();
-module.exports=CheckOut;
+const Attendance=mongoose.model('Attendance',AttendanceScheme);
+Attendance.createIndexes();
+module.exports=Attendance;
